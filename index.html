@@ -1,0 +1,358 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--<meta name="viewport" content="(1*width=device-width), 
+            initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, 
+            user-scalable=no">
+-->
+<!--<meta name="viewport" content="width=device-width">
+
+-->
+<script type="text/javascript">
+	(function () {
+		var meta = document.createElement('meta');
+		meta.setAttribute('name', 'viewport');
+		meta.setAttribute('content', 'user-scalable=no,initial-scale=' + (1.0 / window.devicePixelRatio));
+		document.getElementsByTagName('head')[0].appendChild(meta);
+	}());
+	
+</script>
+<title>Agenda Cultural BA</title>
+<link href="css/BlackBerry-JQM-all-1.0.0.css" rel="stylesheet" type="text/css"/>
+<script src="js/BlackBerry-JQM-all-1.0.0.js" type="text/javascript"></script>
+<script src="local:///chrome/webworks.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/bbui.js" ></script>
+<script type="text/javascript" src="js/standard.js"></script>
+
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/invocations.js"></script>
+<script type="text/javascript" src="js/content.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+<link href="css/app.css" rel="stylesheet" type="text/css"/>
+
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false">
+</script>
+
+<script type="text/javascript">
+
+function loadConfig(){
+  var hoy = new Date();
+  var fechaX = hoy.getFullYear()+'-'+(hoy.getMonth()+1)+'-'+hoy.getDate();
+  if (!localStorage.getItem('config')) {
+//    showToast3('Loading data');
+    localStorage.setItem("lang", 0);
+    urlBase='http://agendacultural.buenosaires.gob.ar/webservice/response/client.php?Method=GetEventosListFiltered';
+    localStorage.setItem("url", urlBase);
+    localStorage.setItem("destacado", '&DestacadoHome=');
+    localStorage.setItem("cant", '5');
+    localStorage.setItem("estado", '&EstadoEvento=');
+    localStorage.setItem("orden", '&OrdenarPor=FechaFin&Orden=DESC');
+    localStorage.setItem("desde", fechaX);
+    localStorage.setItem("hasta", fechaX);
+    localStorage.setItem("mapa", "bb");
+    //localStorage.setItem("acercaDe", 'Aplicación gratuita creada por B+C Consultores, pero en un futuro podrá tener, auspiciantes, publicidad o contenido adicional pago. La información aquí contenida es libre y publica provista por el gobierno de la Ciudad Autonoma de Buenos Aires.');
+    localStorage.setItem("config", 1);
+  
+    cargar_variables();
+    
+    blackberry.event.addEventListener("invoked", function (onInvokedInfo) {
+      var obj = document.getElementById('image');
+      obj.src = onInvokedInfo.uri;
+    });
+    //findShareTargets();
+  } 
+  //cargar_agenda();
+}
+
+function mylink(data1, data2) {
+//	alert("Agenda cultural BA te recomienda "+data1+'<br>enlace: '+data2)
+        blackberry.invoke.invoke({
+        target: "",
+        action: "bb.action.SHARE",
+        type: "text/plain",
+        data: dic.traducir("Agenda cultural BA te recomienda")+' '+data1+'<br>'+data2
+    }, onSuccess, onError);
+	
+}
+/*caragr inicio */
+function cargarfeed(){
+  parsePage();
+  loadConfig();
+	cargar_agenda();
+
+  myCover();
+    if (bbm.registered === false) {
+       bbm.register();
+    } else {
+       showToast3('Registrado en BBM');
+    }
+}
+
+
+function verMenuApplication() {
+	$('#top').panel('open');
+}
+function verMyContextMenu() {
+	$('#mycontextmenu').panel('open');
+}
+function onEnterCover() {
+  blackberry.ui.cover.labels = '';
+  blackberry.ui.cover.setContent(blackberry.ui.cover.TYPE_IMAGE, 'local:///img/icon.png');
+  blackberry.ui.cover.updateCover();
+}
+window.addEventListener("load", function (e) {
+	document.addEventListener("webworksready", cargarfeed);
+	blackberry.event.addEventListener("swipedown", verMenuApplication);
+	blackberry.event.addEventListener("contextmenu", verMyContextMenu);
+  blackberry.event.addEventListener("entercover", verMyCover);
+//	$.mobile.page.prototype.options.backBtnText = dic.traducir("Atras");
+
+}, false);	
+</script>
+
+</head> 
+<body>
+<div data-role="page" id="page">
+	<!-- top panel -->
+	<div data-role="panel" id="top" data-dark-modal="true" data-position="top" data-display="push" data-theme="a" class="">
+		<div data-role="applicationmenu">
+    		<a data-role="action" href="#about" onClick="" date-rel="close"> <img src="img/info.png" alt="Help" />
+			<p id="lblswpInfo"></p></a>
+            <a data-role="action" href="#" onClick="idioma(0)" date-rel="close"> <img src="img/es.png" alt="Help" />
+			<p id="lblswpEs"></p></a>
+            <a data-role="action" href="#" onClick="idioma(2)"  date-rel="close"> <img src="img/br.png" alt="Help" />
+			<p id="lblswpPt"></p></a>
+            <a data-role="action" href="#" onClick="idioma(1)" date-rel="close"> <img src="img/us.png" alt="Help" />
+			<p id="lblswpEn"></p></a>
+    	    <a data-role="action" href="#config" onClick="$('#top').panel('close');cargar_config();"  date-rel="close"> <img src="img/ico/ic_settings.png" alt="Settings" />
+			<p id="lblswpConfig"></p></a>
+		</div>
+  </div><!-- // top panel -->
+ 
+   	<div data-role="header" data-theme="a" data-position="fixed">
+		<h1>Agenda Cultural BA</h1>
+        <div><img class="ui-btn-right" src="img/icon-tray.png"></div>
+	</div><!--// fin header -->
+	<div data-role="content" id="contenPage1">
+    
+	</div><!-- //fin content -->
+	<div data-role="footer" data-position="fixed">
+    	<div data-role="actionbar" id="actionbar">
+        <!--<a href="#about" data-role="tab-overflow" data-rel="dialog" class="active"></a>-->
+		    <a href="#" data-role="tab" onClick="cargar_gps();"><img src="img/ico/ic_map.png" alt="reload">
+		    <p id="lblUbicar"></p></a>
+   <!--<a href="#" data-role="tab" onClick="cargar_lugares();"><img src="img/ico/ic_map.png" alt="reload">
+        <p id="lblLugares"></p></a>-->
+        <a href="#" data-role="tab" onClick="cargar_agenda();"><img src="img/ico/ic_rotate.png" alt="reload"><p id="lblRefrescar"></p></a>
+            <a href="#rightpanel" data-role="action-overflow"></a>
+        </div>
+	</div><!--// fin footer -->
+    
+    <div data-role="panel" id="mycontextmenu">
+    	<a data-role="action"><img src="img/ico/ic_forward_as_bbm.png" alt="Help" />Share BBM</a>
+        <a data-role="action"><img src="img/ico/ic_forward_as_email.png" alt="Help" />Share email</a>
+        <a data-role="action"><img src="img/ico/ic_settings.png" alt="Help" />Agendar</a>
+    </div><!--//menu cotextual -->
+    
+    <div data-role="panel" id="about" data-position="left" data-display="overlay" data-theme="a" class="bb10-panel">
+      <h4 id="lblabout"></h4>
+      <div data-role="fixedpanelbutton">
+		    <ul data-role="listview" data-theme="a">
+			   <li><a href="#" data-rel="close" data-icon="forward" data-iconpos="right" id="btnCloseAbout">Cerrar</a></li>
+		    </ul>
+	     </div>
+    </div><!--//fin about -->
+   
+    <div data-role="panel" id="rightpanel" data-position="right" data-display="overlay" data-theme="a" class="bb10-panel">
+      <ul data-role="listview" data-theme="a">
+        <li><a href="#" data-role="action" onClick('bbm.shareText()') data-rel="close" data-icon="img/ico/ic_bbm.png" data-iconpos="right" id="lblShare"><img src="img/ico/ic_share.png"></a></li>
+        <li><a href="#" data-role="action" onClick=('bbm.inviteToDownload();') data-rel="close" id="lblInvite"><img src="img/ico/ic_forward_as_bbm.png"></a></li>
+      </ul>
+      <div data-role="fixedpanelbutton">
+			 <ul data-role="listview" data-theme="a">
+			   <li><a href="#" data-rel="close" data-icon="forward" data-iconpos="right" id="lblClose"><img src="img/ico/ic_previous.png"></a></li>
+			 </ul>
+		  </div>
+    </div><!--//fin right panel -->
+</div> <!--// fin page contentOage1-->
+<style type="text/css" media="screen">
+      .ui-radio, .ui-radio * { 
+        outline: none;
+      }
+      
+      textarea.ui-input-text {
+        width: 708px;
+      }
+      input.ui-input-text {
+        width: 708px;
+      }
+      .ui-field-contain .ui-slider.ui-slider-switch {
+        float:right;
+      }
+      
+      .ui-controlgroup.ui-controlgroup-horizontal {
+        float: right;
+      }
+      
+    </style>
+<div data-role="page" id="config">
+	<div data-role="header" data-theme="a" data-position="fixed">
+		<h1>Agenda Cultural BA</h1>
+        <div><img class="ui-btn-right" src="img/icon-tray.png">
+        </div>
+	</div><!--// fin header -->
+  <div data-role="content" id="contentConfig">
+  <div class="BB10Container" style="border-left-width: 25px; border-right-width: 25px;">
+    <h4 id="lblConfigTipoEvento"></h4>
+    <!-- Orden 
+    <div data-role="fieldcontain">
+      <label for="flip-Orden" id="lblconfOrden"></label>
+      <select name="slider" id="flip-Orden" data-role="slider">
+        <option value="off" onChange='window.localStorage.setItem("orden", '&Orden=DESC');' id="">Des</option>
+        <option value="on" onChange='window.localStorage.setItem("orden", '&Orden=DESC');' id="">Asc</option>
+      </select>
+    </div>
+    <hr class="gradient">
+    <!--Usar GPS    > 
+    <div data-role="fieldcontain">
+      <label for="flip-GPS" id="lblconfGps"></label>
+      <select name="slider" id="flip-GPS" data-role="slider">
+        <option value="off" onChange='window.localStorage.removeItem("gps")' id="lblGpsOptNo"></option>
+        <option value="on" onChange='alert("On")' id="lblGpsOptSi"></option>
+      </select>
+    </div>
+    <hr class="gradient">
+    <!-- Registros -->
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup">
+        <legend id="lblConfCant"></legend>
+          <input type="radio" name="radio-Cant" onClick="window.localStorage.setItem('cant', '5')" id="radio1_0" value="" checked="true" />
+          <label for="radio1_0">5</label>
+          
+          <input type="radio" name="radio-Cant" onClick="window.localStorage.setItem('cant', '10')" id="radio1_1" value="" />
+          <label for="radio1_1">10</label>
+          
+          <input type="radio" name="radio-Cant" onClick="window.localStorage.setItem('cant', '15')" id="radio1_2" value="" />
+          <label for="radio1_2">15</label>
+      </fieldset>
+    </div>
+		<hr class="gradient">
+		<!-- Fecha desde hasta -->
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup">
+        <label for="confDesde" id="lblConfDesde"></label>
+        <input type="date" id="confDesde" onChange='setConfDesde()' style="float:right;" />
+			</fieldset>
+      <fieldset data-role="controlgroup">
+        <label for="confHasta" id="lblConfHasta"></label>
+        <input type="date" id="confHasta" onChange='setConfHasta()' style="float:right;" />
+			</fieldset>
+    </div>
+    <hr class="gradient">
+    <div data-role="fieldcontain">
+      <label id="lblConfMapa"></label>
+      <table>
+        <tr>
+          <td>
+            <div onClick='window.localStorage.setItem("mapa", "google");showToast3("Google Maps");' align="center">
+              <img src="img/mapaGoogle.png"><br><label id="lblMapGoogle"></label>
+            </div>
+          </td>
+          <td>
+            <div onClick='window.localStorage.setItem("mapa", "bb");showToast3("Blackberry Maps");' align="center">
+              <img src="img/bbMapa.png"><br><label id="lblMapBB"></label>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <hr class="gradient">
+    <div><br><br><br></div>
+  </div>
+</div>
+    <!-- // fin content -->
+  <div data-role="footer" data-position="fixed">
+    <div id="action-bar-area" data-role="actionbar">
+      <div data-role="back" id="backConfig"></div>
+      <a href="#" data-role="action" id="saveConfig" onClick='new_config();'?>
+        <img src="img/ico/ic_done.png" alt="Save" />
+      <p id="lblConfSave"></p>
+      </a>      
+    </div>
+  </div><!--//fin footer -->
+</div><!-- // fin page config-->
+<div data-role="page" id="noticia">
+	<div data-role="header" data-theme="a" data-position="fixed">
+		<h1>Agenda Cultural BA</h1>
+        <div><img class="ui-btn-right" src="img/icon-tray.png"></div>
+	</div><!--// fin header -->
+	<div data-role="content">
+    	<div id="divNoti">
+	    	<h1 id="tituNoticia"></h1>
+    	    <h4 id="resNoticia"></h4>
+        	<div id="imgNoticia" onClick="imageOverflow();"></div>
+            <div style="display: block;">
+	        <p class="noticia" id="descNoticia"></p>
+    	    <p id="socNoticia"></p>
+            <p id="videoNoticia"></p>
+            <p><br><br><br></p>
+            </div>
+        </div>
+    <hr>	
+    </div><!-- // fin content -->
+	<div data-role="footer" data-position="fixed">
+		<div data-role="actionbar" id="actionbar">
+		  <div data-role="back"></div>		
+	<!--		<a href="#mapa" data-role="action" id="verMapa">
+				<img src="img/ico/ic_map.png" alt="" />
+			<p id="lblVermapa"></p>
+		  </a>	-->
+      <a data-role="action"></a>
+			<a href="#rightZpanel" data-role="action-overflow"></a>
+      </div>
+	</div><!-- //fin footer -->
+    <div data-role="panel" id="rightZpanel" data-position="right" data-display="overlay" data-theme="a" class="bb10-panel" style="width:400px;">      
+    	 <ul data-role="listview" data-theme="a" style="padding:5px 0px">
+         <li>
+          <a href="#" data-role="action" id="shareNoti"><img src="img/ico/ic_forward_as_bbm.png"></a>
+         </li>
+         <li>
+         </li>
+         <li>
+         <a href="#" data-role="action" onClick="zoomText('increase','descNoticia')"  id="lblIncrease"><img src="img/ico/ic_font_increase.png" alt="increase" style="vertical-align:central" /></a>
+         </li>
+         <li>
+         <a href="#" data-role="action" onClick="zoomText('decrease','descNoticia')"  id="lblDecrease"><img src="img/ico/ic_font_decrease.png" alt="decrease" /></a>
+         </li>
+		<li>
+        <a href="#" data-role="action" onClick="zoomText('restore','descNoticia')"  id="lblRestore"><img src="img/ico/ic_font_normal.png" alt="restore" /></a>
+        </li>
+		</ul>
+        <div></div>    	
+        <div data-role="fixedpanelbutton">
+			<ul data-role="listview" data-theme="a">
+				<li>
+          <a href="#" data-rel="close" data-icon="forward" data-iconpos="right" id="lblCloseZpanel"><img src="img/ico/ic_previous.png"></a>
+        </li>
+			</ul>
+		</div>
+    </div>
+</div><!-- // fin page -->
+<div data-role="page" id="mapa">
+	<div data-role="header" data-theme="a" data-position="fixed">
+		<h1>Agenda Cultural BA</h1>
+        <div><img class="ui-btn-right" src="img/icon-tray.png"></div>
+	</div><!--// fin header -->
+	<div data-role="content" id="content_map">
+    	<div id="map_canvas">Map in html5</div>
+  </div><!-- // fin content -->
+	<div data-role="footer" data-position="fixed">
+		<div id="action-bar-area" data-role="actionbar">
+			<div data-role="back"></div>
+	</div>
+    	
+	</div><!-- //fin footer -->
+</div><!-- // fin page -->
+</body>
+</html>

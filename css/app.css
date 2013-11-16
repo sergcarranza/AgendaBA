@@ -1,0 +1,174 @@
+body, html {
+}
+
+/* ================================================================ */
+/* 								Z10 								*/
+/* ================================================================ */
+@media screen and (min-height: 721px){
+	/*add z10 specific stylings here*/
+#map_canvas{
+	width: 100%;
+	height: 100%;
+}
+
+}
+
+/* ================================================================ */
+/* 								Q10 								*/
+/* ================================================================ */
+
+@media screen and (max-width: 720px) and (max-height: 720px){
+	/*add q10 specific stylings here*/
+#map_canvas{
+	width: 718px; height: 718px;
+}
+}
+
+/* ================================================================ */
+/* 								OLED 								*/
+/* ================================================================ */
+
+@media (-blackberry-display-technology: -blackberry-display-oled) {
+	/* add OLED screen specific styling here 
+	 For more details on how this should be used please read:
+	 http://devblog.blackberry.com/2013/03/blackberry-10-oled-control-coloring-update/
+	*/
+}
+#divRss {
+    width:100%;
+    padding: 0px 3px 3px 5px;
+	background-color:#FFF;
+	border:1px solid #D3CAD7;
+	margin-top:3px;
+}
+#divNoti {
+    width:97%;
+    padding: 0px 3px 3px 5px;
+	background-color:#FFF;
+	border:1px solid #D3CAD7;
+	margin-top:3px;
+	text-align:justify;
+}
+
+#divNoti p a{
+	font-size:24px;
+	font-weight:normal;
+}
+
+#imgNoticia{
+	height:200px;
+	overflow:hidden;
+}
+#modalWindow{
+	font-size:45px;
+}
+#lblfechas{
+	font-size:16px;
+	color: red;
+}
+#map_canvas{
+	width:100%;
+	height:100%
+}
+.feedEkList{width:450px; list-style:none outside none;background-color:#FFFFFF; border:1px solid #D3CAD7; padding:4px 6px; color:#3E3E3E;}
+
+.ItemTitle{
+ font-weight:bold;
+ margin:5px 0px 0px 0px;
+ padding-top:3px;
+}
+.ItemTitle a{ color:#4EBAFF; text-decoration:none }
+.ItemTitle a:hover{ text-decoration:underline }
+
+.ItemContent{
+ padding:1px 3px 3px 3px;
+/* border-bottom:1px solid #D3CAD7;*/
+ color:#3E3E3E;
+}
+
+.ItemContent img{
+	width:50%
+}
+
+
+.ItemDate{
+font-size:11px;
+color:#AAA;
+}
+.readMore{
+ padding:1px 3px 3px 3px;
+ border-bottom:1px solid #D3CAD7;
+ color:#F00; /* #3E3E3E;*/
+ text-decoration:none;
+ display:inline-block;
+}
+
+
+#divSrc
+{
+color:#888888;
+font-size:11px;
+width:460px;
+}
+
+#invite-to-bbm-form {
+    display:inline-block;
+}
+
+.invite-to-bbm-add {
+    float:right;
+    display:inline-block;
+    height:50px;
+}
+
+.invite-to-bbm-add:hover {
+    background-color:#2175F7;
+}
+
+.contact-picture {	
+	float:left;
+	width:50px;
+	height:50px;
+}
+
+.contact-details {
+    display:table-cell;
+    vertical-align:middle;
+    height:50px;
+}
+
+.contact-invitation:hover {
+    background-color:#2175F7;
+}
+#lblConfCant{
+	width:706px;
+}
+#lblconfGps{
+	width:500px;
+}
+#flip-GPS{
+	float:right;
+	width:706;
+}
+#flip-GPS{
+	float:right;
+	width:706;
+}
+
+@media screen {
+.ui-radio, .ui-radio * { 
+	outline: none;
+}
+textarea.ui-input-text {
+	width: 708px;
+}
+input.ui-input-text {
+	width: 708px;
+}
+.ui-field-contain .ui-slider.ui-slider-switch {
+	float:right;
+}
+.ui-controlgroup.ui-controlgroup-horizontal {
+	float: right;
+}
+}
